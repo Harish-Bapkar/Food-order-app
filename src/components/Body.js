@@ -9,6 +9,7 @@ import UserContext from "../utils/UserContext";
 const Boday = () => {
   const [listOfResturent, setListOfResturent] = useState([]);
   const [filterResturent, setFilterResturen] = useState([]);
+  const [isError, setIsError] = useState(false);
 
   const [searchText, setSearchText] = useState("type");
 
@@ -23,18 +24,24 @@ const Boday = () => {
   }, []);
 
   const fetchData = async () => {
-    const data = await fetch(RESTURAENT_LIST_URL);
+    try {
+      const data = await fetch(RESTURAENT_LIST_URL);
 
-    const json = await data.json();
-    setFilterResturen(
-      json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants
-    );
-    setListOfResturent(
-      json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants
-    );
+      const json = await data.json();
+      setFilterResturen(
+        json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle
+          ?.restaurants
+      );
+      setListOfResturent(
+        json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle
+          ?.restaurants
+      );
+    } catch (err) {
+      setIsError(true);
+    }
   };
 
-  if (listOfResturent.length === 0) {
+  if (isError) {
     return <ShimerUI />;
   }
 
